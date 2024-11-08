@@ -36,7 +36,11 @@ public class User implements UserDetails {
     private String fullName;
     private Role role;
     @OneToMany(mappedBy = "organizer")
+    @Setter(AccessLevel.NONE)
     private List<Event> eventsCreated;
+    @OneToMany(mappedBy = "user")
+    @Setter(AccessLevel.NONE)
+    private List<Booking> bookings;
 
     public User(String username, String password, String email, String fullName) {
         this.username = username;

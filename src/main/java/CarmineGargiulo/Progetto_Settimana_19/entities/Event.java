@@ -1,5 +1,6 @@
 package CarmineGargiulo.Progetto_Settimana_19.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -7,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -29,13 +31,18 @@ public class Event {
     @ManyToOne
     @JoinColumn(name = "organizer_id", nullable = false)
     private User organizer;
+    @OneToMany(mappedBy = "event")
+    @Setter(AccessLevel.NONE)
+    @JsonIgnore
+    private List<Booking> bookings;
 
-    public Event(String title, String description, String location, LocalDate date, int maxSeats) {
+    public Event(String title, String description, String location, LocalDate date, int maxSeats, User organizer) {
         this.title = title;
         this.description = description;
         this.location = location;
         this.date = date;
         this.maxSeats = maxSeats;
+        this.organizer = organizer;
     }
 
     @Override
@@ -45,6 +52,7 @@ public class Event {
                 ", description: " + description +
                 ", location: " + location +
                 ", date: " + date +
-                ", maxSeats: " + maxSeats;
+                ", maxSeats: " + maxSeats +
+                ", orginizer: (" + organizer + ")";
     }
 }
