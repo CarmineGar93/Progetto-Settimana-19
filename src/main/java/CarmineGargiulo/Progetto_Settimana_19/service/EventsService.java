@@ -31,8 +31,10 @@ public class EventsService {
     }
 
     public Event saveEvent(EventDTO body, User organizer) {
+        LocalDate date = validateDate(body.date());
+        if (date.isBefore(LocalDate.now())) throw new BadRequestException("Cannot create an event in the past");
         return eventsRepository.save(new Event(body.title(), body.description(), body.location(),
-                validateDate(body.date()), body.maxSeats(), organizer));
+                date, body.maxSeats(), organizer));
     }
 
     public List<Event> findAllEventByOrganizer(User organizer) {

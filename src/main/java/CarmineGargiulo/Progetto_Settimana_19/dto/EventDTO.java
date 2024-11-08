@@ -9,7 +9,7 @@ public record EventDTO(
         @Size(min = 5, max = 255, message = "Title must have more than 4 characters")
         String title,
         @NotEmpty(message = "Description must be provided")
-        @Size(min = 20, max = 255, message = "Description must have more than 20 characters")
+        @Size(min = 10, max = 255, message = "Description must have more than 10 characters")
         String description,
         @NotEmpty(message = "Location must be provided")
         @Size(min = 3, max = 255, message = "Location must have more than 2 characters")
