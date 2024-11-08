@@ -4,6 +4,7 @@ import CarmineGargiulo.Progetto_Settimana_19.dto.BookingDTO;
 import CarmineGargiulo.Progetto_Settimana_19.entities.Booking;
 import CarmineGargiulo.Progetto_Settimana_19.entities.Event;
 import CarmineGargiulo.Progetto_Settimana_19.entities.User;
+import CarmineGargiulo.Progetto_Settimana_19.exceptions.AuthDeniedException;
 import CarmineGargiulo.Progetto_Settimana_19.exceptions.BadRequestException;
 import CarmineGargiulo.Progetto_Settimana_19.exceptions.NotFoundException;
 import CarmineGargiulo.Progetto_Settimana_19.exceptions.UnauthorizedException;
@@ -15,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -41,5 +43,16 @@ public class BookingsService {
         if (event.getOrganizer().getUserId().equals(currentUser.getUserId()))
             throw new UnauthorizedException("Organizer cannot make a booking for his/her own event");
         return bookingsRepository.save(new Booking(body.bookedSeats(), currentUser, event));
+    }
+
+    public List<Booking> findBookingsByUser(User user) {
+        return bookingsRepository.findByUser(user);
+    }
+
+    public void deleteBookingById(UUID bookingId, User user) {
+        Booking booking = findBookingById(bookingId);
+        if (!booking.getUser().getUserId().equals(user.getUserId()))
+            throw new AuthDeniedException("You don't have access to delete this booking");
+        bookingsRepository.delete(booking);
     }
 }

@@ -36,6 +36,12 @@ public class ExceptionsHandler extends ResponseEntityExceptionHandler {
         return new ErrorDTO(e.getMessage(), LocalDateTime.now());
     }
 
+    @ExceptionHandler(AuthDeniedException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ErrorDTO handleAuthDenied(AuthDeniedException e) {
+        return new ErrorDTO(e.getMessage(), LocalDateTime.now());
+    }
+
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorDTO handleGeneric(Exception e) {

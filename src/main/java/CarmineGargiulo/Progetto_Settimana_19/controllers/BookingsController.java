@@ -15,6 +15,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -49,5 +50,16 @@ public class BookingsController {
         }
         return bookingsService.saveBooking(body, current);
 
+    }
+
+    @GetMapping("/mybookings")
+    public List<Booking> getAllBookingsByCurrentUser(@AuthenticationPrincipal User current) {
+        return bookingsService.findBookingsByUser(current);
+    }
+
+    @DeleteMapping("/mybookings/{bookingId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteBooking(@AuthenticationPrincipal User current, @PathVariable UUID bookingId) {
+        bookingsService.deleteBookingById(bookingId, current);
     }
 }
