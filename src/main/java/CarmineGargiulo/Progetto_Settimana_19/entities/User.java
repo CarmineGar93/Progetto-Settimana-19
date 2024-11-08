@@ -32,10 +32,10 @@ public class User implements UserDetails {
     private String username, password, email, name, surname;
     @Enumerated(EnumType.STRING)
     private Role role;
-    @OneToMany(mappedBy = "organizer")
+    @OneToMany(mappedBy = "organizer", cascade = CascadeType.REMOVE)
     @Setter(AccessLevel.NONE)
     private List<Event> eventsCreated;
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     @Setter(AccessLevel.NONE)
     private List<Booking> bookings;
 
