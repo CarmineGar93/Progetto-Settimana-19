@@ -21,7 +21,7 @@ import java.util.UUID;
 @Entity
 @Table(name = "users")
 @JsonIgnoreProperties({"accountNonLocked", "accountNonExpired", "credentialsNonExpired", "enabled", "authorities",
-        "role", "password", "username"})
+        "role", "password", "username", "eventsCreated"})
 public class User implements UserDetails {
     @Id
     @GeneratedValue
@@ -35,6 +35,8 @@ public class User implements UserDetails {
     @Column(nullable = false, name = "full_name")
     private String fullName;
     private Role role;
+    @OneToMany(mappedBy = "organizer")
+    private List<Event> eventsCreated;
 
     public User(String username, String password, String email, String fullName) {
         this.username = username;
@@ -43,6 +45,7 @@ public class User implements UserDetails {
         this.fullName = fullName;
         String[] nameSurname = fullName.split(" ");
         this.avatarUrl = "https://ui-avatars.com/api/?name=" + nameSurname[0] + "+" + nameSurname[1];
+        this.role = Role.USER;
     }
 
     @Override
