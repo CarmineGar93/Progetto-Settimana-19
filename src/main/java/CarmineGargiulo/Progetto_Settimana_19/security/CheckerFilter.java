@@ -37,7 +37,7 @@ public class CheckerFilter extends OncePerRequestFilter {
         String authHeader = request.getHeader("Authorization");
         if (authHeader == null || !authHeader.startsWith("Bearer "))
             throw new UnauthorizedException("Authorization header missing or invalid format");
-        String token = authHeader.replace("Bearer", "");
+        String token = authHeader.replace("Bearer ", "");
         jwt.verifyToken(token);
         String userId = jwt.extractUserIdFromToken(token);
         User current = usersService.findUserById(UUID.fromString(userId));
