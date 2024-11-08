@@ -1,7 +1,7 @@
 package CarmineGargiulo.Progetto_Settimana_19.security;
 
 import CarmineGargiulo.Progetto_Settimana_19.entities.User;
-import CarmineGargiulo.Progetto_Settimana_19.exceptions.UnauthoriedException;
+import CarmineGargiulo.Progetto_Settimana_19.exceptions.UnauthorizedException;
 import CarmineGargiulo.Progetto_Settimana_19.service.UsersService;
 import CarmineGargiulo.Progetto_Settimana_19.tools.JWT;
 import jakarta.servlet.FilterChain;
@@ -36,7 +36,7 @@ public class CheckerFilter extends OncePerRequestFilter {
                                     FilterChain filterChain) throws ServletException, IOException {
         String authHeader = request.getHeader("Authorization");
         if (authHeader == null || !authHeader.startsWith("Bearer "))
-            throw new UnauthoriedException("Authorization header missing or invalid format");
+            throw new UnauthorizedException("Authorization header missing or invalid format");
         String token = authHeader.replace("Bearer", "");
         jwt.verifyToken(token);
         String userId = jwt.extractUserIdFromToken(token);

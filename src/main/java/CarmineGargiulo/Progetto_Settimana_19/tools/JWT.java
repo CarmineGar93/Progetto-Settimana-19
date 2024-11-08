@@ -1,7 +1,7 @@
 package CarmineGargiulo.Progetto_Settimana_19.tools;
 
 import CarmineGargiulo.Progetto_Settimana_19.entities.User;
-import CarmineGargiulo.Progetto_Settimana_19.exceptions.UnauthoriedException;
+import CarmineGargiulo.Progetto_Settimana_19.exceptions.UnauthorizedException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,7 +27,7 @@ public class JWT {
         try {
             Jwts.parser().verifyWith(Keys.hmacShaKeyFor(secret.getBytes())).build().parse(token);
         } catch (Exception e) {
-            throw new UnauthoriedException("Invalid token. Please re-do login");
+            throw new UnauthorizedException("Invalid token. Please re-do login");
         }
     }
 

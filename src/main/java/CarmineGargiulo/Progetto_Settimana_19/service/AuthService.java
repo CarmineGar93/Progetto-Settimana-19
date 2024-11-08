@@ -3,7 +3,7 @@ package CarmineGargiulo.Progetto_Settimana_19.service;
 import CarmineGargiulo.Progetto_Settimana_19.dto.UserLoginDTO;
 import CarmineGargiulo.Progetto_Settimana_19.entities.User;
 import CarmineGargiulo.Progetto_Settimana_19.exceptions.NotFoundException;
-import CarmineGargiulo.Progetto_Settimana_19.exceptions.UnauthoriedException;
+import CarmineGargiulo.Progetto_Settimana_19.exceptions.UnauthorizedException;
 import CarmineGargiulo.Progetto_Settimana_19.tools.JWT;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,9 +23,9 @@ public class AuthService {
             User current = usersService.findUserByUsername(body.username());
             if (bcrypt.matches(body.password(), current.getPassword()))
                 return jwt.generateToken(current);
-            throw new UnauthoriedException("Invalid credentials");
+            throw new UnauthorizedException("Invalid credentials");
         } catch (NotFoundException e) {
-            throw new UnauthoriedException("Invalid credentials");
+            throw new UnauthorizedException("Invalid credentials");
         }
     }
 }
