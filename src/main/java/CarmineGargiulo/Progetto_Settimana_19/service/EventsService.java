@@ -77,6 +77,8 @@ public class EventsService {
         Event searched = getEventById(eventId);
         if (!searched.getOrganizer().getUserId().equals(organizer.getUserId()))
             throw new AuthDeniedException("You don't have access to delete this event");
+        if (searched.getBookings() != null)
+            throw new BadRequestException("There are already bookings for this event. Deletion not possible");
         eventsRepository.delete(searched);
     }
 
