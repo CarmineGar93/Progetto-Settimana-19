@@ -1,7 +1,12 @@
 package CarmineGargiulo.Progetto_Settimana_19.service;
 
+import CarmineGargiulo.Progetto_Settimana_19.dto.BookingDTO;
 import CarmineGargiulo.Progetto_Settimana_19.entities.Booking;
+import CarmineGargiulo.Progetto_Settimana_19.entities.Event;
+import CarmineGargiulo.Progetto_Settimana_19.entities.User;
+import CarmineGargiulo.Progetto_Settimana_19.exceptions.BadRequestException;
 import CarmineGargiulo.Progetto_Settimana_19.exceptions.NotFoundException;
+import CarmineGargiulo.Progetto_Settimana_19.exceptions.UnauthorizedException;
 import CarmineGargiulo.Progetto_Settimana_19.repositories.BookingsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -16,6 +21,8 @@ import java.util.UUID;
 public class BookingsService {
     @Autowired
     private BookingsRepository bookingsRepository;
+    @Autowired
+    private EventsService eventsService;
 
     public Page<Booking> findAllBookings(int page, int size, String sortBy) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
@@ -26,5 +33,13 @@ public class BookingsService {
         return bookingsRepository.findById(bookingId).orElseThrow(() -> new NotFoundException("booking", bookingId));
     }
 
-
+    public Booking saveBooking(BookingDTO body, User currentUser) {
+        Event event = eventsService.getEventById(body.eventId());
+        int occupiedSeats = bookingsRepository.checkSeatsOccupiedByEvent(event);
+        if (event.getMaxSeats() - occupiedSeats < body.bookedSeats())
+            throw new BadRequestException("Not enough available seats for this event");
+        if (event.getOrganizer().getUserId().equals(currentUser.getUserId()))
+            throw new UnauthorizedException("Organizer cannot make a booking for his/her own event");
+        return bookingsRepository.save(new Booking(body.bookedSeats(), currentUser, event));
+    }
 }
