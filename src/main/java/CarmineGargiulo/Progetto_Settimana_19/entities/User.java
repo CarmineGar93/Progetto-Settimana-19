@@ -34,6 +34,7 @@ public class User implements UserDetails {
     private String avatarUrl;
     @Column(nullable = false, name = "full_name")
     private String fullName;
+    @Enumerated(EnumType.STRING)
     private Role role;
     @OneToMany(mappedBy = "organizer")
     @Setter(AccessLevel.NONE)
