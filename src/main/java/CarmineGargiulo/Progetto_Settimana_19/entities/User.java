@@ -21,7 +21,7 @@ import java.util.UUID;
 @Entity
 @Table(name = "users")
 @JsonIgnoreProperties({"accountNonLocked", "accountNonExpired", "credentialsNonExpired", "enabled", "authorities",
-        "role", "password", "username", "eventsCreated"})
+        "role", "password", "username", "eventsCreated", "bookings"})
 public class User implements UserDetails {
     @Id
     @GeneratedValue
@@ -29,11 +29,7 @@ public class User implements UserDetails {
     @Column(name = "user_id")
     private UUID userId;
     @Column(nullable = false)
-    private String username, password, email;
-    @Column(nullable = false, name = "avatar_url")
-    private String avatarUrl;
-    @Column(nullable = false, name = "full_name")
-    private String fullName;
+    private String username, password, email, name, surname;
     @Enumerated(EnumType.STRING)
     private Role role;
     @OneToMany(mappedBy = "organizer")
@@ -43,20 +39,19 @@ public class User implements UserDetails {
     @Setter(AccessLevel.NONE)
     private List<Booking> bookings;
 
-    public User(String username, String password, String email, String fullName) {
+    public User(String username, String password, String email, String name, String surname) {
         this.username = username;
         this.password = password;
         this.email = email;
-        this.fullName = fullName;
-        String[] nameSurname = fullName.split(" ");
-        this.avatarUrl = "https://ui-avatars.com/api/?name=" + nameSurname[0] + "+" + nameSurname[1];
+        this.name = name;
+        this.surname = surname;
         this.role = Role.USER;
     }
 
     @Override
     public String toString() {
         return "User " + userId +
-                " = fullName: " + fullName +
+                " = fullName: " + name + " " + surname +
                 ", username: " + username +
                 ", role: " + role +
                 ", email: " + email;
